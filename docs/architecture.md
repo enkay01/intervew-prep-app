@@ -4,55 +4,56 @@
 
 ```mermaid
 flowchart LR
-  Learner["Learner"] --> Web["Interview Prep Web App"]
-  Web --> Auth["Auth Provider"]
-  Web --> API["Application API"]
-  API --> DB[("PostgreSQL")]
-  API --> Queue["Background Jobs"]
-  Queue --> Scheduler["Plan + Revision Scheduler"]
-  API --> Resources["Curated Resource Metadata"]
-  API --> CodexLog["Codex Session Log"]
-  Learner --> Phone["Phone Progress View"]
-  Phone --> Web
+  Learner["Learner"] --> App["Personal Study App"]
+  App --> Storage[("Local Storage / JSON / SQLite")]
+  App --> Scheduler["Plan + Revision Logic"]
+  App --> Resources["Curated Resource Metadata"]
+  App --> Practice["Q&A, Flashcards, Coding Prompts"]
+  Learner --> Phone["Optional Phone Browser"]
+  Phone --> App
 ```
 
 ## Container architecture
 
 ```mermaid
 flowchart TB
-  subgraph Client
-    NextUI["Next.js UI"]
-    MobileView["Responsive phone dashboard"]
-  end
-
-  subgraph Backend
-    ApiRoutes["Next.js API/BFF routes"]
-    PythonAPI["FastAPI learning/exercise service"]
-    FlaskLabs["Flask comparison labs"]
-    Worker["Scheduler worker"]
+  subgraph LocalApp["Local-first app"]
+    UI["Responsive study UI"]
+    Planner["Daily planner and revision queue"]
+    Trainer["Flashcards, Q&A, mock interview checklists"]
+    Exercises["Exercise catalog and attempt forms"]
   end
 
   subgraph Data
-    Postgres[("PostgreSQL")]
-    ObjectStore[("Exports and artifacts")]
+    LocalStore[("localStorage / JSON")]
+    SQLite[("SQLite after MVP")]
+    Backup["Manual Markdown/JSON backup"]
   end
 
-  NextUI --> ApiRoutes
-  MobileView --> ApiRoutes
-  ApiRoutes --> PythonAPI
-  PythonAPI --> Postgres
-  FlaskLabs --> Postgres
-  Worker --> Postgres
-  Worker --> ObjectStore
+  subgraph StudyContent["Interview practice content"]
+    ReactNext["React / Next.js / TypeScript tasks"]
+    PythonAPIPractice["FastAPI / Flask tasks"]
+    NativePractice["React Native tasks"]
+  end
+
+  UI --> Planner
+  UI --> Trainer
+  UI --> Exercises
+  Planner --> LocalStore
+  Trainer --> LocalStore
+  Exercises --> LocalStore
+  LocalStore -. upgrade when needed .-> SQLite
+  LocalStore --> Backup
+  Exercises --> StudyContent
 ```
 
 ## Core data model
 
 ```mermaid
 erDiagram
-  USER ||--o{ STUDY_SESSION : completes
-  USER ||--o{ ATTEMPT : submits
-  USER ||--o{ MOCK_INTERVIEW : takes
+  LEARNER_PROFILE ||--o{ STUDY_SESSION : completes
+  LEARNER_PROFILE ||--o{ ATTEMPT : submits
+  LEARNER_PROFILE ||--o{ MOCK_INTERVIEW : takes
   TECHNOLOGY ||--o{ TOPIC : contains
   TOPIC ||--o{ RESOURCE : references
   TOPIC ||--o{ FLASHCARD : drills
@@ -60,36 +61,34 @@ erDiagram
   EXERCISE ||--o{ ATTEMPT : receives
   STUDY_SESSION ||--o{ STUDY_TASK : includes
   STUDY_TASK }o--|| TOPIC : targets
-  CODEX_SESSION ||--o{ CODEX_CHECKPOINT : reports
 
-  USER {
-    uuid id
-    string email
+  LEARNER_PROFILE {
+    string id
     string target_role
     int daily_hours
+    string interview_month
   }
   TECHNOLOGY {
-    uuid id
+    string id
     string name
     int priority
   }
   TOPIC {
-    uuid id
-    uuid technology_id
+    string id
+    string technology_id
     string name
     string interview_weight
   }
   EXERCISE {
-    uuid id
-    uuid topic_id
+    string id
+    string topic_id
     string type
     int estimated_minutes
     string difficulty
   }
   ATTEMPT {
-    uuid id
-    uuid user_id
-    uuid exercise_id
+    string id
+    string exercise_id
     int score
     string confidence
     datetime next_revision_at
@@ -101,19 +100,16 @@ erDiagram
 ```mermaid
 sequenceDiagram
   participant User
-  participant UI as Next.js UI
-  participant API as App API
+  participant UI as Study UI
   participant Scheduler
-  participant DB as PostgreSQL
+  participant Store as Local Store
 
   User->>UI: Open today's plan
-  UI->>API: GET /daily-plan
-  API->>DB: Load readiness, attempts, revision debt
-  API->>Scheduler: Build plan for available hours
+  UI->>Store: Load readiness, attempts, revision debt
+  UI->>Scheduler: Build plan for available hours
   Scheduler->>Scheduler: Prioritize weak high-value topics
   Scheduler->>Scheduler: Add revision from prior mistakes
-  Scheduler->>DB: Persist study session and tasks
-  API-->>UI: Return tasks, timings, and success criteria
+  Scheduler->>Store: Save study session and tasks
   UI-->>User: Show daily checklist
 ```
 
@@ -135,20 +131,27 @@ flowchart TD
 
 ## Codex autonomous implementation flow
 
+Codex progress is about building the app, not studying for interviews. It should live in project notes, commits, PRs, or chat updates. The study app may include a small "what changed" note only if that helps the learner know which study features are ready to use.
+
 ```mermaid
 flowchart LR
   Backlog["Established docs + backlog"] --> Slice["Select small vertical slice"]
   Slice --> Codex["Codex cloud session"]
   Codex --> Checkpoint["Commit + tests + notes"]
-  Checkpoint --> Phone["Phone progress check"]
+  Checkpoint --> Phone["Phone check of Codex/chat status"]
   Phone --> Decision{"Continue after limit reset?"}
   Decision -- Yes --> Slice
   Decision -- No --> Review["Manual review + merge"]
 ```
 
+## Optional AI assistance
+
+AI integrations should support practice, not infrastructure. Good uses are follow-up interview questions, concise answer feedback, weak-topic summaries, and daily-plan adjustments. MVP features should work without AI so the study loop stays reliable.
+
 ## Architecture principles
 
 - Keep interview curriculum data separate from presentation so plans can be regenerated.
-- Make scheduling/scoring deterministic and testable before adding AI enhancements.
-- Use the platform itself as a portfolio project demonstrating React, Next.js, TypeScript, FastAPI, and Flask knowledge.
+- Make scheduling/scoring deterministic and testable before considering AI enhancements.
+- Use AI only where it directly improves study: generating follow-up questions, drafting answer rubrics, or summarizing weak spots. Keep the learner's active recall and coding practice central.
+- Do not add auth, hosted databases, queues, background jobs, or production deployment until a real single-user need appears.
 - Prefer small vertical slices that can be built and reviewed independently by long-running Codex sessions.
