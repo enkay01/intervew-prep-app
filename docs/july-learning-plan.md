@@ -23,26 +23,26 @@ Because the goal is to be interviewing within July, use an intensive but sustain
 
 - React components, props, state, events, lists, forms, hooks, effects, and custom hooks.
 - TypeScript everyday types, narrowing, functions, object types, unions, and React props/events.
-- Build: reusable component library, form flow, and dashboard widgets.
+- Practice builds: reusable component library, form flow, and dashboard widgets written by the learner as exercises.
 - Mock: React Q&A plus one timed component exercise.
 
 ### Week 2: Next.js full-stack patterns
 
 - Routing, layouts, server/client components, data fetching, caching, forms, route handlers, and deployment.
-- Build: daily plan dashboard, resource pages, attempts, and progress persistence.
+- Practice builds: pages, forms, route handlers, attempts, and persistence patterns written by the learner as exercises.
 - Mock: explain rendering strategies and debug hydration/data fetching scenarios.
 
 ### Week 3: Python APIs with FastAPI and Flask
 
 - FastAPI validation, routers, dependencies, auth, async, testing, and OpenAPI.
 - Flask routes, blueprints, app factory, request context, config, and testing.
-- Build: exercise API in FastAPI and comparison lab in Flask.
+- Practice builds: exercise API in FastAPI and comparison lab in Flask written by the learner.
 - Mock: design an API contract and compare FastAPI vs Flask.
 
 ### Week 4: React Native, integration, and interviews
 
 - React Native components, styling, FlatList, TextInput, navigation, storage, and platform differences.
-- Build: small Expo prototype or mobile-first progress view.
+- Practice build: small Expo prototype or mobile-first progress view written by the learner.
 - Integration: full mock interviews, portfolio story, STAR examples, and weak-area remediation.
 
 ## Daily plan template

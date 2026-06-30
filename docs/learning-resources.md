@@ -2,7 +2,7 @@
 
 ## Source selection principles
 
-Use official documentation first, then practice platforms for interview repetition. The objective is not passive tutorial completion; every resource must produce an interview answer, a code exercise, or a portfolio feature.
+Use official documentation first, then practice platforms for interview repetition. The objective is not passive tutorial completion; every resource must produce an interview answer, a code exercise, or a short explanation that can be reused during interview prep.
 
 ## Primary sources
 
@@ -86,4 +86,4 @@ For every resource block, create at least one of:
 1. A flashcard set with 5-10 interview questions.
 2. A code exercise with acceptance criteria.
 3. A 2-minute spoken answer outline.
-4. A mini-feature in the prep platform.
+4. A small practice artifact: component, API endpoint, typed utility, mock design answer, or bug-fix exercise.

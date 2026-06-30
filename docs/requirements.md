@@ -2,18 +2,20 @@
 
 ## Product goal
 
-Build an interview prep platform that turns weak React/full-stack confidence into interview-ready capability across React, Next.js, TypeScript, React Native, FastAPI, and Flask.
+Build a small personal interview prep app that turns weak React/full-stack confidence into interview-ready capability across React, Next.js, TypeScript, React Native, FastAPI, and Flask.
+
+This is not a SaaS product, a multi-user learning platform, or a portfolio app whose codebase is meant to teach the learner. Codex will implement the app. The learner benefits from using the app: doing exercises, answering prompts, revising mistakes, and seeing what to study next.
 
 ## Target user
 
-A developer preparing to apply for a wider range of full-stack jobs in July who needs daily guided practice, revision, coding tests, and concise interview explanations.
+One developer preparing to apply for a wider range of full-stack jobs in July. The app only needs to support that person's study data, schedule, exercises, and progress.
 
 ## Success metrics
 
 - Complete at least 25 focused study days in July.
 - Complete at least 60 coding exercises across UI, API, TypeScript, and data structures.
 - Complete at least 8 timed mock interviews.
-- Produce portfolio-ready mini-projects using React, Next.js, TypeScript, FastAPI, Flask, and React Native.
+- Produce interview-ready practice artifacts: code exercises, short explanations, API designs, and mock interview notes.
 - Maintain a revision streak with spaced recall of previous exercises.
 
 ## Feature list
@@ -38,7 +40,8 @@ A developer preparing to apply for a wider range of full-stack jobs in July who 
 - Flashcards for principles, lifecycle/rendering, routing, state, hooks, typing, API design, auth, testing, deployment, and trade-offs.
 - Answer recording with rubric scoring: accuracy, concision, trade-off awareness, and example quality.
 - Follow-up question generator for deeper interview probing.
-- “Explain it like a senior engineer” answer templates.
+- The follow-up generator can be rule-based in MVP. AI is optional later if it improves practice quality.
+- "Explain it like a senior engineer" answer templates.
 
 ### 4. Coding practice workspace
 
@@ -61,7 +64,7 @@ A developer preparing to apply for a wider range of full-stack jobs in July who 
 ### 6. Progress tracking
 
 - Dashboard for July progress, streaks, readiness scores, weak topics, and next best action.
-- Phone-friendly status view for checking Codex/cloud session progress.
+- Phone-friendly study dashboard for checking today's plan and marking tasks complete.
 - Daily completion checklist and weekly readiness review.
 
 ### 7. Resource library
@@ -70,16 +73,15 @@ A developer preparing to apply for a wider range of full-stack jobs in July who 
 - Resource metadata: topic, difficulty, interview relevance, estimated time, and linked exercises.
 - Notes and summaries connected to flashcards and coding tasks.
 
-### 8. Codex implementation operations
+### 8. Build notes
 
-- Establish documentation before code.
-- Break implementation into small autonomous Codex tasks.
-- Track sessions, limit resets, branch status, PRs, and test results.
-- Provide mobile-readable progress updates.
+- Keep a simple build backlog so Codex can implement the app in small slices.
+- Keep build progress outside the study loop unless it affects what can be used today.
+- Do not make Codex logs a core app feature; they are project-management notes, not interview prep.
 
 ## Functional requirements
 
-- The system shall store technologies, topics, lessons, flashcards, exercises, attempts, rubrics, study sessions, and mock interviews.
+- The system shall store technologies, topics, lessons, flashcards, exercises, attempts, rubrics, study sessions, and mock interviews for one local user.
 - The system shall generate a daily plan based on deadline, readiness, and revision debt.
 - The system shall schedule revision for exercises answered incorrectly or with low confidence.
 - The system shall support timed coding tests and persist attempts.
@@ -88,20 +90,23 @@ A developer preparing to apply for a wider range of full-stack jobs in July who 
 
 ## Non-functional requirements
 
-- Fast local development and CI feedback.
-- Strong TypeScript typing across frontend and API contracts.
+- Fast local startup and simple local backup.
+- Strong typing in app code where it reduces implementation risk; the app code is not the learner's primary study material.
 - Accessible UI with keyboard navigation and readable contrast.
 - Testable domain logic for scheduling, scoring, and progress calculations.
-- Secure handling of auth tokens and user data.
-- Exportable learning data to Markdown or JSON.
+- No authentication for MVP because there is only one local user.
+- Local-first storage. SQLite is acceptable when persistence needs queries; JSON files are acceptable for the first static/content-heavy slice.
+- Optional backup/export to Markdown or JSON only when it helps review study history or move data between machines. Export is not an interview-prep feature by itself.
 
-## Out of scope for initial MVP
+## Scope guard
 
-- Multi-user classrooms.
-- Payments.
-- AI voice interview calls.
-- Native app store release.
-- Complex code execution sandbox infrastructure beyond local/test-runner-based exercises.
+This section exists only to prevent the app drifting back into a platform. It does not list every product idea that could exist.
+
+- Login, account management, roles, teams, classrooms, and public sharing.
+- Hosted production deployment.
+- Native mobile app release.
+- AI voice calls.
+- Complex remote code execution infrastructure. Local/manual checks are enough at first.
 
 ## MVP cut
 

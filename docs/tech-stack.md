@@ -1,39 +1,56 @@
 # Tech Stack Decision Record
 
+## Decision principle
+
+Choose the stack that makes the study app quick to build, easy to run locally, and easy to change. Do not choose technologies merely because the learner needs to study them. Codex writing the app does not teach the learner React, Next.js, FastAPI, or Flask. The app should teach through prompts, exercises, timed practice, revision, and feedback.
+
 ## Recommended stack
 
 | Layer | Choice | Why it fits the interview goal |
 | --- | --- | --- |
-| Web app | Next.js with React | Demonstrates modern full-stack React patterns, routing, data fetching, server/client boundaries, forms, and deployment. |
-| Language | TypeScript | Required for many React/Next.js roles and useful for discussing contracts, safety, generics, narrowing, and maintainability. |
-| Styling | Tailwind CSS plus accessible component primitives | Fast UI delivery while leaving room to discuss accessibility and design systems. |
-| Primary API | FastAPI | High-value Python API framework using type hints and Pydantic-style validation concepts. |
-| Comparison API/labs | Flask | Shows ability to explain lightweight Python web fundamentals and contrast Flask with FastAPI. |
-| Database | PostgreSQL | Common production relational database for progress, attempts, resources, and scheduling. |
-| ORM | Prisma for Next.js data or SQLAlchemy for Python service | Pick one primary persistence path for MVP; SQLAlchemy is better if FastAPI owns the backend. |
-| Testing | Vitest, React Testing Library, Playwright, pytest | Covers unit, component, e2e, and Python API tests. |
-| Deployment | Vercel for Next.js, Render/Fly.io/Railway for Python API, managed Postgres | Practical interview discussion around deployment boundaries and trade-offs. |
+| Web app | Static React with Vite, or plain HTML/JS if the MVP stays very small | Runs locally, builds fast, and can be published to GitHub Pages later without server infrastructure. |
+| Language | TypeScript if using React; JavaScript is acceptable for a throwaway prototype | TypeScript improves scheduling/scoring correctness, but the app code is not the learner's study source. |
+| Styling | Simple CSS or Tailwind only if already convenient | The app is a study tool, so speed, readability, and maintainability matter more than a design system. |
+| Persistence | Start with local JSON/localStorage; move to SQLite when queries and history become awkward | Single-user local-first storage avoids unnecessary database setup. SQLite gives real persistence without running a service. |
+| API/backend | None for MVP | A local app can schedule, score, and track progress in the browser or a small local script. |
+| FastAPI/Flask | Learning exercises inside the curriculum, not app infrastructure | These should be practiced directly through interview tasks, not added to the app just to use them. |
+| Testing | Unit tests for scheduling/scoring; one smoke test for the app | Test the logic that decides what to study next. Avoid heavy test setup before the tool is useful. |
+| Deployment | Local first; optional GitHub Pages for cloud-accessible static app | The learner does not need Vercel, managed databases, or production hosting for MVP. |
 | Diagrams/docs | Markdown and Mermaid | Keeps planning inspectable before implementation. |
 
 ## MVP stack recommendation
 
-Use **Next.js + TypeScript + Tailwind + PostgreSQL** first, with a **FastAPI service** for exercises/scheduling once the frontend roadmap is usable. Add **Flask labs** as learning modules rather than production-critical infrastructure.
+Use a **local-first static web app** first:
+
+1. Vite + React + TypeScript if a component-based UI is useful.
+2. Plain HTML/CSS/JavaScript if the MVP can remain tiny.
+3. localStorage or a JSON file for the first slice.
+4. SQLite once attempts, revision history, and filtering need real queries.
+
+For cloud access after MVP, prefer the lightest path:
+
+1. GitHub Pages for a static build.
+2. Browser storage plus manual JSON backup.
+3. Later, if phone and laptop need shared state, add a small SQLite-backed sync option or a tiny hosted backend.
+
+GitHub Pages makes the app reachable from a phone, but it does not automatically sync study data between devices. Treat cross-device data as a separate post-MVP decision.
 
 ## Rationale
 
-- React weakness is the main blocker, so the product should be built in React/Next.js from the start.
-- TypeScript should be used everywhere in the UI to force daily practice with props, events, API responses, unions, and generics.
-- FastAPI should power at least one real feature so the learner can explain Python type hints, validation, dependency injection, OpenAPI docs, async, and tests.
-- Flask should be included through focused comparison exercises: routing, request context, blueprints, app factory, testing, and when a lightweight framework is appropriate.
-- React Native is best introduced after React fundamentals, using shared concepts: components, props, state, hooks, navigation, lists, forms, and platform APIs.
+- The app's stack should minimize build drag. The study curriculum should teach interview technologies.
+- React/Next.js/TypeScript practice belongs in daily exercises where the learner writes code, explains choices, and gets timed feedback.
+- FastAPI and Flask practice belongs in backend exercises where the learner builds endpoints, validates data, writes tests, and explains framework trade-offs.
+- React Native practice belongs in focused mobile exercises after React fundamentals, not in the prep app unless mobile access becomes the main blocker.
+- SQLite is the right upgrade path when localStorage/JSON becomes too limited. PostgreSQL is unnecessary for one local user.
+- AI integrations should be judged by study value: follow-up prompts, answer feedback, weak-spot summaries, and plan adjustments. They should not require a database, auth, or hosted backend for MVP.
 
 ## Implementation order
 
-1. Static documentation and curriculum schema.
-2. Next.js shell, dashboard, resource library, and daily checklist.
-3. TypeScript domain logic for scoring and scheduling.
+1. Static curriculum/resource schema.
+2. Local app shell with dashboard, resource library, and daily checklist.
+3. Deterministic scheduling/scoring logic with tests.
 4. Flashcard/Q&A trainer.
-5. Exercise catalog and attempts.
-6. FastAPI exercise service and tests.
-7. Flask comparison labs.
-8. React Native companion mini-app or Expo prototype after the web MVP.
+5. Exercise catalog and attempt tracking.
+6. SQLite persistence if the local data model has outgrown JSON/localStorage.
+7. GitHub Pages build if phone access matters after MVP.
+8. FastAPI, Flask, Next.js, and React Native practice modules as study content, not app infrastructure.
