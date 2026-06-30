@@ -14,6 +14,7 @@ This repository is intentionally in the **Establish** phase: requirements, featu
 - [Learning resources and interview knowledge map](docs/learning-resources.md)
 - [July interview readiness plan](docs/july-learning-plan.md)
 - [Codex autonomous implementation workflow](docs/codex-workflow.md)
+- [Implementation epics, tickets, and plans](docs/implementation-backlog.md)
 
 ## Primary outcome
 

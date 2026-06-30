@@ -28,6 +28,10 @@ Keep Codex implementation tracking outside the app unless a tiny status note hel
 - Manual review notes:
 - Follow-up backlog:
 
+## Ticket source of truth
+
+Use [implementation-backlog.md](implementation-backlog.md) for epics, tickets, dependencies, and per-ticket plans. The list below is a historical slice outline; the backlog is the implementation queue to execute.
+
 ## Recommended initial slices
 
 1. Scaffold the smallest local app shell that fits the accepted tech stack.
